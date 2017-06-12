@@ -1,5 +1,6 @@
 #import pandas as pd
 
+import itertools
 import numpy as np
 import random
 import permutation_test.ap as ap
@@ -278,29 +279,6 @@ def getMeanDiffListForAllPermutations(lst_1, lst_2, n_combinations_max = 20000):
         return mean_diffs
 
 
-def permutations(n, g):
-    '''
-    returns a generator of permutations
-
-    n : number of elements (integer)
-    g : list of values to permute 
-
-    example:
-    In [27]: import permutation_test as p
-    In [28]: perm_generator = p.permutations(3,[10,11,12,13])
-    In [29]: perms = list(perm_generator)
-    In [30]: perms
-    Out[30]: [[10, 11, 12], [10, 11, 13], [10, 12, 13], [11, 12, 13]]
-    '''
-
-    if n == 0:
-        yield []
-
-    for j, x in enumerate(g):
-        for v in permutations(n-1, g[j+1:]):
-            yield [x] + v
-
-
 def getPerms(dat, n_of_group_a, n_combinations_max = 20000):
     '''
     combined permutation for 2 lists 
@@ -334,9 +312,9 @@ def getPerms(dat, n_of_group_a, n_combinations_max = 20000):
     n_combinations = nCk(len(dat_index), n_of_group_a)
 
     if n_combinations < n_combinations_max:
-        perm_list = list(permutations(n_of_group_a, dat_index))
+        perm_list = list(itertools.permutations(dat_index, n_of_group_a))
     else:
-        perms_iter = permutations(n_of_group_a, dat_index)
+        perms_iter = itertools.permutations(dat_index, n_of_group_a)
         print('taking random subsample of size %s from %s possible permutations' % (n_combinations_max, n_combinations))
         perm_list = iter_sample_fast(perms_iter, n_combinations_max)
             
