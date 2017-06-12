@@ -312,20 +312,20 @@ def getPerms(dat, n_of_group_a, n_combinations_max = 20000):
     n_combinations = nCk(len(dat_index), n_of_group_a)
 
     if n_combinations < n_combinations_max:
-        perm_list = list(itertools.permutations(dat_index, n_of_group_a))
+        comb_list = list(itertools.combinations(dat_index, n_of_group_a))
     else:
-        perms_iter = itertools.permutations(dat_index, n_of_group_a)
-        print('taking random subsample of size %s from %s possible permutations' % (n_combinations_max, n_combinations))
-        perm_list = iter_sample_fast(perms_iter, n_combinations_max)
+        combs_iter = itertools.combinations(dat_index, n_of_group_a)
+        print('taking random subsample of size %s from %s possible combinations' % (n_combinations_max, n_combinations))
+        comb_list = iter_sample_fast(combs_iter, n_combinations_max)
             
 
     combi = []
-    for perm in perm_list:  
-        group_b = [dat[i] for i in dat_index if not i in perm]
+    for comb in comb_list:
+        group_b = [dat[i] for i in dat_index if not i in comb]
         if len(group_b) == 0:
             raise('gp')
         
-        group_a = list(itemgetter(*perm)(dat))
+        group_a = list(itemgetter(*comb)(dat))
         
         combi.append((group_a, group_b))
     return combi    
